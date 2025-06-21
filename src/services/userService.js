@@ -46,6 +46,10 @@ const getUserFriendsCount = async (userId) => {
   return res.data;
 };
 
+const getUserById = async (userId) => {
+  const res = await api.get(`/users/${userId}`);
+  return res.data;
+};
 
 export default {
   getUserSuggestions,
@@ -56,5 +60,6 @@ export default {
   getUserFriends,
   updateUser,
   getUserFriendsCount,
-  getUserSuggestionsMin
+  getUserSuggestionsMin,
+  getUserById
 };

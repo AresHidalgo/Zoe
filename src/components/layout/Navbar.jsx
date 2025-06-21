@@ -23,52 +23,78 @@ const Navbar = () => {
       if (currentUser) {
         try {
           const friendsData = await userService.getUserFriends(currentUser.id);
-          setFriends(friendsData);
+          setFriends(friendsData || []);
         } catch (error) {
           console.error('Error fetching friends:', error);
+          setFriends([]); // Reset to empty array on error
         }
+      } else {
+        setFriends([]); // Clear friends if no current user
       }
     };
 
     fetchFriends();
   }, [currentUser]);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) {
+  // Función para filtrar usuarios en tiempo real
+  const filterUsers = (query) => {
+    if (!query.trim()) {
       setSearchResults([]);
       setShowSearchResults(false);
       return;
     }
 
     setIsSearching(true);
-    
-    // Filter friends whose name or username contains the search query (case insensitive)
-    // and exclude the current user
-    const results = friends.filter(friend => {
-      const fullName = (friend.fullName || '').toLowerCase();
-      const username = (friend.username || '').toLowerCase();
-      const query = searchQuery.toLowerCase().trim();
+
+    // Usar setTimeout para no sobrecargar con cada tecla
+    const searchDelay = setTimeout(() => {
+      const searchTerm = query.toLowerCase().trim();
+
+      if (!Array.isArray(friends) || friends.length === 0) {
+        setSearchResults([]);
+        setShowSearchResults(true);
+        setIsSearching(false);
+        return;
+      }
+
+      // Primero eliminamos duplicados basados en _id
+      const uniqueFriends = Array.from(new Map(friends.map(friend => [friend._id, friend])).values());
       
-      return (fullName.includes(query) || username.includes(query)) && 
-             friend.id !== currentUser?.id;
-    });
+      // Luego filtramos los resultados
+      const results = uniqueFriends.filter(friend => {
+        if (!friend || !friend._id) return false;
 
-    setSearchResults(results);
-    setShowSearchResults(true);
-    setIsSearching(false);
+        const email = String(friend.email || '').toLowerCase();
+        const name = String(friend.name || '').toLowerCase();
+
+        return email.includes(searchTerm) || name.includes(searchTerm);
+      });
+
+      setSearchResults(results);
+      setShowSearchResults(true);
+      setIsSearching(false);
+    }, 100); // Pequeño retraso para mejorar el rendimiento
+
+    return () => clearTimeout(searchDelay);
   };
 
+  // Manejar cambios en el input de búsqueda
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    if (!e.target.value) {
-      setSearchResults([]);
-      setShowSearchResults(false);
-    }
+    const value = e.target.value;
+    setSearchQuery(value);
+    filterUsers(value);
   };
 
-  const handleResultClick = (username) => {
-    navigate(`/profile/${username}`);
+  // Manejar el envío del formulario (por si acaso)
+  const handleSearch = (e) => {
+    e.preventDefault();
+    filterUsers(searchQuery);
+  };
+
+  // Eliminar esta función ya que la hemos reemplazado con la nueva implementación
+
+  const handleResultClick = (userId) => {
+    navigate(`/profile/${userId}`);
     setSearchQuery('');
     setSearchResults([]);
     setShowSearchResults(false);
@@ -98,39 +124,55 @@ const Navbar = () => {
                 <div className="relative">
                   <form onSubmit={handleSearch}>
                     <div className="relative">
-                      <input
-                        type="text"
-                        placeholder="Search users..."
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        onFocus={() => searchQuery && setShowSearchResults(true)}
-                        className="pl-10 pr-4 py-2 w-64 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500"
-                      />
-                      <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                      {isSearching && (
-                        <Loader2 className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 animate-spin" />
-                      )}
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Buscar usuarios..."
+                          value={searchQuery}
+                          onChange={handleSearchChange}
+                          onFocus={() => searchQuery && setShowSearchResults(true)}
+                          className="pl-10 pr-4 py-2 w-64 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        />
+                        <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                        {isSearching && (
+                          <Loader2 className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 animate-spin" />
+                        )}
+                      </div>
                     </div>
                   </form>
                   {showSearchResults && searchResults.length > 0 && (
-                    <div className="absolute mt-1 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
-                      {searchResults.map(user => (
-                        <div
-                          key={user.id}
-                          onClick={() => handleResultClick(user.username)}
-                          className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center space-x-3"
-                        >
-                          <img
-                            src={user.profilePicture || 'https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysplit&w=150'}
-                            alt={user.username}
-                            className="h-8 w-8 rounded-full object-cover"
-                          />
-                          <div>
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">{user.fullName || user.username}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">@{user.username}</p>
+                    <div className="absolute mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
+                      <div className="py-1">
+                        {searchResults.map(user => (
+                          <div
+                            key={user._id}
+                            className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <img
+                                  src={'https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysplit&w=150'}
+                                  alt={user.name}
+                                  className="h-10 w-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                                />
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                                </div>
+                              </div>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleResultClick(user._id);
+                                }}
+                                className="text-xs font-medium text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 px-3 py-1 rounded-full border border-pink-200 dark:border-pink-800 hover:bg-pink-50 dark:hover:bg-pink-900/30 transition-colors"
+                              >
+                                Ver perfil
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   )}
                   {showSearchResults && searchResults.length === 0 && searchQuery && !isSearching && (
@@ -291,24 +333,38 @@ const Navbar = () => {
                     </div>
                   </form>
                   {showSearchResults && searchResults.length > 0 && (
-                    <div className="mt-1 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
-                      {searchResults.map(user => (
-                        <div
-                          key={user.id}
-                          onClick={() => handleResultClick(user.username)}
-                          className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center space-x-3"
-                        >
-                          <img
-                            src={user.profilePicture || 'https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysplit&w=150'}
-                            alt={user.username}
-                            className="h-8 w-8 rounded-full object-cover"
-                          />
-                          <div>
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">{user.fullName || user.username}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">@{user.username}</p>
+                    <div className="mt-1 w-full bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
+                      <div className="py-1">
+                        {searchResults.map(user => (
+                          <div
+                            key={user._id}
+                            className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <img
+                                  src={'https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysplit&w=150'}
+                                  alt={user.name}
+                                  className="h-10 w-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                                />
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                                </div>
+                              </div>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleResultClick(user._id);
+                                }}
+                                className="text-xs font-medium text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 px-3 py-1 rounded-full border border-pink-200 dark:border-pink-800 hover:bg-pink-50 dark:hover:bg-pink-900/30 transition-colors"
+                              >
+                                Ver perfil
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   )}
                   {showSearchResults && searchResults.length === 0 && searchQuery && !isSearching && (

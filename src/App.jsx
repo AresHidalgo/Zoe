@@ -17,6 +17,7 @@ import NotificationsPage from './pages/NotificationsPage';
 import FriendsPage from './pages/FriendsPage';
 import SettingsPage from './pages/SettingsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import UserProfilePage from './pages/UserProfilePage';
 
 function App() {
   return (
@@ -45,6 +46,11 @@ function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile/:userId" element={
+              <ProtectedRoute>
+                <UserProfilePage />
               </ProtectedRoute>
             } />
             <Route path="/messages" element={
