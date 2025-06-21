@@ -1,27 +1,118 @@
-Zoe: Tu Experiencia de Citas Inteligente con IA
-Demo en Vivo: zoe-nu.vercel.app
+# 📱 Zoe – Aplicación de Conexiones Sociales
 
-Zoe no es solo otra aplicación de citas; es una plataforma revolucionaria diseñada para redefinir cómo te conectas con otras personas. Aprovechando la inteligencia artificial de vanguardia y una interfaz elegante y moderna, Zoe ofrece un viaje de citas más inteligente, intuitivo y, en última instancia, más exitoso.
+Zoe es una aplicación móvil desarrollada con el objetivo de conectar personas mediante un sistema de emparejamiento y citas. Diseñada con una interfaz amigable, temas personalizables y funciones centradas en la experiencia del usuario.
 
-✨ Características
-Zoe ofrece un conjunto completo de funcionalidades diseñadas para mejorar cada etapa de tu experiencia de citas:
+---
 
-🧠 Matchmaking Inteligente con IA: Olvídate de los deslizamientos superficiales. Los algoritmos avanzados de IA de Zoe analizan tus preferencias, intereses e interacciones para sugerir coincidencias altamente compatibles, aumentando tus posibilidades de conexiones genuinas.
-💬 Chat Asistido por IA: Di adiós a los silencios incómodos y al bloqueo del escritor. Nuestro asistente de chat impulsado por IA ofrece iniciadores de conversación, respuestas ingeniosas e ideas para mantener tus conversaciones fluidas y atractivas.
-🗓️ Programación de Citas sin Esfuerzo: ¿Encontraste una chispa? El calendario integrado de Zoe simplifica el proceso de planificación y gestión de tus citas, enviando recordatorios y ayudándote a coordinar sin esfuerzo.
-👤 Perfiles Personalizables: Muestra tu personalidad única con perfiles ricos y personalizables. Agrega fotos, describe tus intereses y destaca lo que te hace ser tú, para atraer a personas con ideas afines.
-🎨 Diseño Neumórfico Moderno: Experimenta una interfaz de usuario visualmente impresionante e intuitiva inspirada en el neumorfismo. Sus elementos suaves y en relieve crean una estética sofisticada y atractiva.
-🌓 Temas Dinámicos: Personaliza tu experiencia en la aplicación con opciones de temas dinámicos, que te permiten cambiar entre modos claro y oscuro según tu preferencia y entorno.
-🛠️ Pila Tecnológica
-Zoe está construida con una arquitectura robusta y escalable para asegurar una experiencia de usuario fluida y de alto rendimiento:
+## 🚀 Características Principales
 
-Frontend:
-React: Una biblioteca de JavaScript para construir interfaces de usuario interactivas y eficientes.
-Tailwind CSS: Un framework CSS de primera utilidad que permite construir diseños personalizados rápidamente y con gran flexibilidad.
-Diseño Responsive: La aplicación está diseñada para adaptarse y ofrecer una experiencia óptima en una variedad de dispositivos y tamaños de pantalla (móvil, tablet, escritorio).
-Backend:
-Node.js (Express.js): Un entorno de ejecución de JavaScript rápido y escalable para manejar las solicitudes API y la lógica de negocio.
-MongoDB: Una base de datos NoSQL flexible para almacenar perfiles de usuario, datos de chat, preferencias de coincidencia y más.
-Autenticación:
-JWT (JSON Web Tokens): Para una autenticación segura y sin estado, permitiendo a los usuarios acceder a recursos protegidos después de iniciar sesión.
-OAuth2: Para una autorización segura e integración con proveedores de identidad de terceros (ej. inicio de sesión con Google, Facebook) para una experiencia de incorporación más fluida.
+- Registro e inicio de sesión (con autenticación JWT/OAuth2)
+- Creación y edición de perfil con fotos e intereses
+- Sistema de emparejamiento tipo Tinder (deslizar)
+- Historial de matches y gestión de conexiones
+- Calendario para agendar citas
+- Temas personalizables (claro, oscuro, neumórfico)
+- Notificaciones en tiempo real
+
+---
+
+## 🧑‍💻 Tecnologías Usadas
+
+### Frontend:
+- React Native / Flutter
+- Tailwind CSS (si aplica)
+- React Navigation
+- Expo (si aplica)
+
+### Backend:
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT para autenticación
+- Cloudinary para almacenamiento de imágenes
+- Google Calendar API (para citas)
+
+---
+
+## 📦 Instalación
+
+### Backend
+```bash
+cd server
+npm install
+cp .env.example .env
+npm run dev
+```
+
+### Frontend
+```bash
+cd app
+npm install
+npm run start
+```
+
+---
+
+## ⚙️ Variables de Entorno
+
+Crea un archivo `.env` en la raíz del backend con:
+
+```
+PORT=5000
+MONGO_URI=<tu_mongo_uri>
+JWT_SECRET=<clave_secreta>
+CLOUDINARY_CLOUD_NAME=<nombre>
+CLOUDINARY_API_KEY=<clave>
+CLOUDINARY_API_SECRET=<secreto>
+```
+
+---
+
+## 📁 Estructura de Carpetas
+
+```
+/server
+  ├── controllers/
+  ├── routes/
+  ├── models/
+  ├── middlewares/
+  └── config/
+      ├── database.js
+      ├── environment.js
+      └── third-party.js
+
+/app
+  ├── screens/
+  ├── components/
+  ├── services/
+  └── navigation/
+```
+
+---
+
+## 🧪 Pruebas
+
+Las pruebas están escritas con Jest y Postman para endpoints REST.
+
+```bash
+npm test
+```
+
+---
+
+## 📌 Estado del Proyecto
+
+✅ Funcionalidades base completas  
+⏳ Próximamente: integración de IA para chat y recomendaciones
+
+---
+
+## 📧 Contacto
+
+¿Tienes preguntas o quieres contribuir?  
+Escríbenos a: `soporte@zoeapp.com`
+
+---
+
+## 📄 Licencia
+
+Este proyecto está licenciado bajo MIT License.
