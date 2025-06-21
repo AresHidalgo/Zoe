@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # 📱 Zoe – Aplicación de Conexiones Sociales
 
 Zoe es una aplicación móvil desarrollada con el objetivo de conectar personas mediante un sistema de emparejamiento y citas. Diseñada con una interfaz amigable, temas personalizables y funciones centradas en la experiencia del usuario.
@@ -11,26 +11,23 @@ Zoe es una aplicación móvil desarrollada con el objetivo de conectar personas 
 - Creación y edición de perfil con fotos e intereses
 - Sistema de emparejamiento tipo Tinder (deslizar)
 - Historial de matches y gestión de conexiones
-- Calendario para agendar citas
 - Temas personalizables (claro, oscuro, neumórfico)
 - Notificaciones en tiempo real
+- Busqueda de usuarios por nombre, intereses, etc.
+- Chat privado entre usuarios
 
 ---
 
 ## 🧑‍💻 Tecnologías Usadas
 
 ### Frontend:
-- React Native / Flutter
+- Vite React
 - Tailwind CSS (si aplica)
-- React Navigation
-- Expo (si aplica)
 
 ### Backend:
 - Node.js + Express
 - MongoDB + Mongoose
 - JWT para autenticación
-- Cloudinary para almacenamiento de imágenes
-- Google Calendar API (para citas)
 
 ---
 
@@ -46,9 +43,9 @@ npm run dev
 
 ### Frontend
 ```bash
-cd app
+cd src
 npm install
-npm run start
+npm run dev
 ```
 
 ---
@@ -61,9 +58,7 @@ Crea un archivo `.env` en la raíz del backend con:
 PORT=5000
 MONGO_URI=<tu_mongo_uri>
 JWT_SECRET=<clave_secreta>
-CLOUDINARY_CLOUD_NAME=<nombre>
-CLOUDINARY_API_KEY=<clave>
-CLOUDINARY_API_SECRET=<secreto>
+
 ```
 
 ---
@@ -78,14 +73,15 @@ CLOUDINARY_API_SECRET=<secreto>
   ├── middlewares/
   └── config/
       ├── database.js
-      ├── environment.js
       └── third-party.js
 
-/app
-  ├── screens/
+/src
+  ├── pages/
   ├── components/
   ├── services/
-  └── navigation/
+  ├── utils/
+  └── contexts/
+
 ```
 
 ---
@@ -102,21 +98,11 @@ npm test
 
 ## 📌 Estado del Proyecto
 
-✅ Funcionalidades base completas  
+✅ Funcionalidades base completas
 ⏳ Próximamente: integración de IA para chat y recomendaciones
-
----
-
-## 📧 Contacto
-
-¿Tienes preguntas o quieres contribuir?  
-Escríbenos a: `soporte@zoeapp.com`
 
 ---
 
 ## 📄 Licencia
 
 Este proyecto está licenciado bajo MIT License.
-=======
-
->>>>>>> c3f8c9b8ab68ee428d21c843b671c24cb34e7cef
