@@ -22,8 +22,11 @@ const Navbar = () => {
     const fetchFriends = async () => {
       if (currentUser) {
         try {
+          const usersData = await userService.getUserSuggestions(currentUser.id);
           const friendsData = await userService.getUserFriends(currentUser.id);
-          setFriends(friendsData || []);
+          const data = [...usersData, ...friendsData];
+          console.log("Data: ", data)
+          setFriends(data || []);
         } catch (error) {
           console.error('Error fetching friends:', error);
           setFriends([]); // Reset to empty array on error
@@ -59,7 +62,7 @@ const Navbar = () => {
 
       // Primero eliminamos duplicados basados en _id
       const uniqueFriends = Array.from(new Map(friends.map(friend => [friend._id, friend])).values());
-      
+
       // Luego filtramos los resultados
       const results = uniqueFriends.filter(friend => {
         if (!friend || !friend._id) return false;
