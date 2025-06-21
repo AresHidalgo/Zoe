@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 📱 Zoe – Aplicación de Conexiones Sociales
 
 Zoe es una aplicación móvil desarrollada con el objetivo de conectar personas mediante un sistema de emparejamiento y citas. Diseñada con una interfaz amigable, temas personalizables y funciones centradas en la experiencia del usuario.
@@ -116,3 +117,6 @@ Escríbenos a: `soporte@zoeapp.com`
 ## 📄 Licencia
 
 Este proyecto está licenciado bajo MIT License.
+=======
+
+>>>>>>> c3f8c9b8ab68ee428d21c843b671c24cb34e7cef
